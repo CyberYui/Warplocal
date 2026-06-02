@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WarpLocal 测试文档</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #333; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .test-section h2 { color: #666; margin-top: 0; }
+        .test-file { margin: 10px 0; padding: 10px; background: #f9f9f9; border-radius: 3px; }
+        .test-file h3 { margin: 0 0 5px 0; color: #444; }
+        .test-file p { margin: 0; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>WarpLocal 测试文档</h1>
+    
+    <div class="test-section">
+        <h2>单元测试 (unit/)</h2>
+        <p>单元测试文件从 app/src/ 目录移动到这里，保持与源代码分离。</p>
+        
+        <div class="test-file">
+            <h3>app_id_tests.rs</h3>
+            <p>测试应用程序 ID 的生成和验证。</p>
+        </div>
+        
+        <div class="test-file">
+            <h3>app_state_tests.rs</h3>
+            <p>测试应用程序状态管理。</p>
+        </div>
+        
+        <div class="test-file">
+            <h3>keyboard_tests.rs</h3>
+            <p>测试键盘快捷键和输入处理。</p>
+        </div>
+        
+        <div class="test-file">
+            <h3>input_suggestions_tests.rs</h3>
+            <p>测试输入建议功能。</p>
+        </div>
+        
+        <div class="test-file">
+            <h3>menu_tests.rs</h3>
+            <p>测试菜单系统。</p>
+        </div>
+        
+        <div class="test-file">
+            <h3>prefix_tests.rs</h3>
+            <p>测试命令前缀处理。</p>
+        </div>
+        
+        <div class="test-file">
+            <h3>preview_config_migration_tests.rs</h3>
+            <p>测试预览配置迁移。</p>
+        </div>
+        
+        <div class="test-file">
+            <h3>root_view_tests.rs</h3>
+            <p>测试根视图组件。</p>
+        </div>
+        
+        <div class="test-file">
+            <h3>safe_triangle_tests.rs</h3>
+            <p>测试安全三角形算法。</p>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>集成测试 (integration/)</h2>
+        <p>集成测试框架，用于测试多个组件之间的交互。</p>
+        
+        <div class="test-file">
+            <h3>crates/integration/</h3>
+            <p>自定义集成测试框架，包含测试工具和数据。</p>
+        </div>
+    </div>
+</body>
+</html>
