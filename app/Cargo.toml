@@ -23,7 +23,7 @@ path = "src/bin/oss.rs"
 test = false
 
 [[bin]]
-name = "warp"
+name = "warplocal"
 path = "src/bin/local.rs"
 test = false
 
@@ -105,7 +105,6 @@ enclose = "1.1.8"
 enum-iterator.workspace = true
 event-listener.workspace = true
 field_mask.workspace = true
-firebase.workspace = true
 flate2 = "1.0.17"
 float-cmp.workspace = true
 futures-lite.workspace = true
@@ -631,7 +630,6 @@ default = [
     "codex_notifications",
     "trim_trailing_blank_lines",
     "open_warp_new_settings_modes",
-    "skip_firebase_anonymous_user",
     "settings_file",
     "directory_tab_colors",
     "git_credential_refresh",
@@ -946,7 +944,6 @@ handoff_local_cloud = []
 hoa_notifications = []
 open_code_notifications = []
 transfer_control_tool = []
-skip_firebase_anonymous_user = []
 solo_user_byok = []
 configurable_toolbar = []
 warpify_footer = []
@@ -1002,13 +999,13 @@ osx_frameworks = [
 resources = ["assets/onboarding"]
 short_description = "The cloud-backed terminal for individuals and teams, developer build."
 
-[package.metadata.bundle.bin.warp]
+[package.metadata.bundle.bin.warplocal]
 category = "public.app-category.developer-tools"
-copyright = "© 2025, Denver Technologies, Inc"
-identifier = "dev.warp.Warp-Local"
+copyright = "© 2026, Denver Technologies, Inc"
+identifier = "dev.warp.WarpLocal"
 name = "WarpLocal"
 resources = ["assets/onboarding"]
-short_description = "The cloud-backed terminal for individuals and teams, developer build."
+short_description = "WarpLocal — 纯本地版 Warp 终端，AI 功能直连你自己的 API"
 
 [package.metadata.cargo-udeps.ignore]
 normal = ["embed_plist"]

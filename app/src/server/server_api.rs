@@ -1409,9 +1409,10 @@ impl ServerApi {
             log::info!("Agent Mode local inference: using custom endpoint url={} model={} task_id={}", provider_url, model_name, task_id);
             // Use the custom model provider from the request (user configured via UI)
             self::ai::call_llm_direct(
-                "You are a helpful AI assistant integrated into the Warp terminal. \
-                 You can help with commands, answer questions, and assist with development tasks. \
-                 When asked to find files or folders, use appropriate shell commands like find, ls, or fd.",
+                "You are a concise AI assistant in the WarpLocal terminal. \
+                 Respond directly and briefly — no emoji, no decorative formatting, \
+                 no markdown unless the user asks for code. When asked to find files \
+                 or folders, use appropriate shell commands like find, ls, or fd.",
                 &user_text,
                 &provider_url,
                 &provider_key,
@@ -1421,9 +1422,10 @@ impl ServerApi {
             log::info!("Agent Mode local inference: using default config.toml endpoint for model {:?}", model_config_key);
             // Fall back to config.toml-based endpoint selection
             self::ai::call_local_llm_with_model(
-                "You are a helpful AI assistant integrated into the Warp terminal. \
-                 You can help with commands, answer questions, and assist with development tasks. \
-                 When asked to find files or folders, use appropriate shell commands like find, ls, or fd.",
+                "You are a concise AI assistant in the WarpLocal terminal. \
+                 Respond directly and briefly — no emoji, no decorative formatting, \
+                 no markdown unless the user asks for code. When asked to find files \
+                 or folders, use appropriate shell commands like find, ls, or fd.",
                 &user_text,
                 model_config_key,
             ).await

@@ -535,7 +535,7 @@ fn test_codebase_context_respect_user_setting() {
 
 #[test]
 fn test_joining_team_moves_objects() {
-    let _flag = FeatureFlag::SharedWithMe.override_enabled(true);
+    let _flag = FeatureFlag::AgentMode.override_enabled(true);
 
     let team = Team {
         uid: 123.into(),
@@ -721,7 +721,7 @@ fn test_agent_attribution_respects_user_setting() {
 
 #[test]
 fn test_leaving_team_moves_objects() {
-    let _flag = FeatureFlag::SharedWithMe.override_enabled(true);
+    let _flag = FeatureFlag::AgentMode.override_enabled(true);
 
     let team = Team {
         uid: 123.into(),

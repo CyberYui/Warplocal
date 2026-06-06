@@ -2614,14 +2614,12 @@ impl PaneGroup {
                 });
             }
             ShareSessionModalEvent::Upgrade => {
+                // No-op: WarpLocal does not have team/shared session upgrade
                 self.terminal_with_open_share_session_modal = None;
                 if let Some(pane) = self.focused_pane_content(ctx) {
                     pane.focus(ctx);
                 }
-                ctx.emit(Event::OpenSettings(SettingsSection::Teams));
                 ctx.notify();
-
-                send_telemetry_from_ctx!(TelemetryEvent::SharedSessionModalUpgradePressed, ctx);
             }
         }
     }

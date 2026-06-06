@@ -1549,9 +1549,9 @@ impl AIClient for ServerApi {
                     part.raw_assistant_answer()));
             }
             let system = concat!(
-                "You are a helpful AI assistant integrated into the Warp terminal. ",
-                "Respond conversationally and concisely. You can help with commands, ",
-                "answer questions, and assist with development tasks.");
+                "You are a concise AI assistant in the WarpLocal terminal. ",
+                "Respond directly and briefly — no emoji, no decorative formatting. ",
+                "You can help with commands, answer questions, and assist with development tasks.");
             let user_msg = if context.is_empty() {
                 prompt.clone()
             } else {

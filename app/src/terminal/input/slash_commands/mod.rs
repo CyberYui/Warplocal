@@ -445,9 +445,22 @@ impl Input {
                     }
                 });
 
+                // Reuse the current conversation if in agent view, or fall back to the
+                // last conversation for this terminal view so context is preserved even
+                // when the user has temporarily exited agent view (e.g. to run a command).
+                let conversation_id = self
+                    .agent_view_controller
+                    .as_ref(ctx)
+                    .agent_view_state()
+                    .active_conversation_id()
+                    .or_else(|| {
+                        BlocklistAIHistoryModel::as_ref(ctx)
+                            .last_conversation_id(self.terminal_view_id)
+                    });
+
                 ctx.emit(Event::EnterAgentView {
                     initial_prompt: prompt,
-                    conversation_id: None,
+                    conversation_id,
                     origin: AgentViewEntryOrigin::SlashCommand { trigger },
                 });
             }

@@ -3,7 +3,6 @@ use std::{result::Result as StdResult, sync::Arc};
 use anyhow::{anyhow, bail, Context as _, Result};
 use async_trait::async_trait;
 use cynic::{MutationBuilder, QueryBuilder};
-use firebase::{FetchAccessTokenResponse, FirebaseError};
 use futures::FutureExt;
 use instant::Duration;
 #[cfg(test)]
@@ -761,18 +760,13 @@ fn fetch_auth_tokens(
             .json::<FetchAccessTokenResponse>()
             .await
             .map_err(anyhow::Error::from)?;
-        match response {
-            FetchAccessTokenResponse::Success {
-                id_token,
-                expires_in,
-                refresh_token,
-            } => Ok(FirebaseAuthTokens::from_response(
-                id_token,
-                refresh_token,
-                expires_in,
-            )?),
-            FetchAccessTokenResponse::Error { error } => Err(error.into()),
+        if let Some(error) = response.error {
+            return Err(error.into());
         }
+        let id_token = response.id_token.ok_or_else(|| anyhow!("missing id_token in Firebase response"))?;
+        let expires_in = response.expires_in.ok_or_else(|| anyhow!("missing expires_in in Firebase response"))?;
+        let refresh_token = response.refresh_token.ok_or_else(|| anyhow!("missing refresh_token in Firebase response"))?;
+        Ok(FirebaseAuthTokens::from_response(id_token, refresh_token, expires_in)?)
     })
 }
 
@@ -916,6 +910,20 @@ impl ErrorExt for UserAuthenticationError {
 }
 register_error!(UserAuthenticationError);
 
+#[derive(Debug, Clone, serde::Deserialize)]
+pub struct FirebaseError {
+    pub code: i32,
+    pub message: String,
+}
+
+impl std::fmt::Display for FirebaseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Firebase error {}: {}", self.code, self.message)
+    }
+}
+
+impl std::error::Error for FirebaseError {}
+
 impl From<FirebaseError> for UserAuthenticationError {
     fn from(error: FirebaseError) -> Self {
         if FETCH_ACCESS_TOKEN_SOFT_ERROR_MESSAGES.contains(&error.message.as_str()) {
@@ -929,6 +937,18 @@ impl From<FirebaseError> for UserAuthenticationError {
             )
         }
     }
+}
+
+#[derive(Debug, Clone, serde::Deserialize)]
+pub struct FetchAccessTokenResponse {
+    #[serde(default)]
+    pub id_token: Option<String>,
+    #[serde(default)]
+    pub expires_in: Option<String>,
+    #[serde(default)]
+    pub refresh_token: Option<String>,
+    #[serde(default)]
+    pub error: Option<FirebaseError>,
 }
 
 #[derive(Error, Debug)]

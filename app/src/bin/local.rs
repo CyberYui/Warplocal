@@ -37,7 +37,7 @@ embed_plist::embed_info_plist_bytes!(r#"
     <key>CFBundleDisplayName</key>
     <string>WarpLocal</string>
     <key>CFBundleExecutable</key>
-    <string>warp</string>
+    <string>warplocal</string>
     <key>CFBundleIdentifier</key>
     <string>dev.warp.Warp-Local</string>
     <key>CFBundleInfoDictionaryVersion</key>

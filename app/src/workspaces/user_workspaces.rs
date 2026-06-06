@@ -626,9 +626,8 @@ impl UserWorkspaces {
         let mut spaces = Vec::new();
         spaces.extend(self.team_spaces().iter());
 
-        if FeatureFlag::SharedWithMe.is_enabled()
-            && CloudModel::as_ref(ctx).has_directly_shared_objects(self, ctx)
-        {
+        // WarpLocal: shared objects disabled
+        if false && CloudModel::as_ref(ctx).has_directly_shared_objects(self, ctx) {
             spaces.push(Space::Shared);
         }
         spaces.push(Space::Personal);
@@ -657,29 +656,10 @@ impl UserWorkspaces {
 
     // Maps an [`Owner`] into a [`Space`], based on the user's team memberships.
     // This is always possible, as unknown owners imply the shared space.
-    pub fn owner_to_space(&self, owner: Owner, ctx: &AppContext) -> Space {
+    pub fn owner_to_space(&self, owner: Owner, _ctx: &AppContext) -> Space {
         match owner {
-            Owner::User { user_uid } => {
-                if !FeatureFlag::SharedWithMe.is_enabled() {
-                    return Space::Personal;
-                }
-
-                let current_user = AuthStateProvider::as_ref(ctx).get().user_id();
-                if Some(user_uid) == current_user {
-                    Space::Personal
-                } else {
-                    Space::Shared
-                }
-            }
-            Owner::Team { team_uid } => {
-                if !FeatureFlag::SharedWithMe.is_enabled()
-                    || self.team_from_uid_across_all_workspaces(team_uid).is_some()
-                {
-                    Space::Team { team_uid }
-                } else {
-                    Space::Shared
-                }
-            }
+            Owner::User { .. } => Space::Personal,
+            Owner::Team { team_uid } => Space::Team { team_uid },
         }
     }
 

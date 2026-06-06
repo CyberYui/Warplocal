@@ -3488,7 +3488,7 @@ impl Input {
         let buy_credits_banner = ctx.add_typed_action_view(BuyCreditsBanner::new);
         ctx.subscribe_to_view(&buy_credits_banner, |me, _, event, ctx| match event {
             BuyCreditsBannerEvent::OpenBillingAndUsage => {
-                ctx.emit(Event::OpenSettings(SettingsSection::BillingAndUsage));
+                // No-op: WarpLocal does not have billing
             }
             BuyCreditsBannerEvent::RefocusInput => {
                 ctx.focus(&me.editor);
@@ -6030,7 +6030,7 @@ impl Input {
                 });
             }
             PromptAlertEvent::OpenBillingAndUsagePage => {
-                ctx.emit(Event::OpenSettings(SettingsSection::BillingAndUsage));
+                // No-op: WarpLocal does not have billing
             }
             PromptAlertEvent::OpenPrivacyPage => {
                 ctx.emit(Event::OpenSettings(SettingsSection::Privacy));
@@ -13274,9 +13274,14 @@ impl Input {
             if prompt.is_empty() {
                 return;
             }
+            // Try to reuse the last conversation so context is preserved even when
+            // the user has temporarily exited agent view.
+            let conversation_id = BlocklistAIHistoryModel::as_ref(ctx)
+                .last_conversation_id(self.terminal_view_id);
+
             ctx.emit(Event::EnterAgentView {
                 initial_prompt: Some(prompt),
-                conversation_id: None,
+                conversation_id,
                 origin: AgentViewEntryOrigin::Input {
                     was_prompt_autodetected: !self
                         .ai_input_model
@@ -14712,7 +14717,7 @@ impl Input {
                 entrypoint: AnonymousUserSignupEntrypoint::SignUpAIPrompt,
             }),
             PromptSuggestionsEvent::OpenBillingAndUsagePage => {
-                ctx.emit(Event::OpenSettings(SettingsSection::BillingAndUsage))
+                // No-op: WarpLocal does not have billing
             }
             PromptSuggestionsEvent::OpenPrivacyPage => {
                 ctx.emit(Event::OpenSettings(SettingsSection::Privacy))

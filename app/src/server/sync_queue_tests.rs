@@ -11,7 +11,7 @@ use crate::cloud_object::{
 use crate::drive::CloudObjectTypeAndId;
 use crate::notebooks::{CloudNotebookModel, NotebookId};
 use crate::server::cloud_objects::update_manager::InitiatedBy;
-use crate::server::server_api::auth::UserAuthenticationError;
+use crate::server::server_api::auth::{FirebaseError, UserAuthenticationError};
 use crate::server::server_api::ServerApiProvider;
 use crate::system::SystemStats;
 use crate::workflows::workflow::{Argument, ArgumentType, Workflow};
@@ -24,7 +24,6 @@ use crate::server::sync_queue::{CreationFailureReason, QueueItemId, SyncQueueEve
 use crate::{NetworkStatus, QueueItem, SyncQueue};
 use anyhow::anyhow;
 use chrono::{DateTime, Duration, Utc};
-use firebase::FirebaseError;
 use itertools::Itertools;
 use std::sync::Arc;
 use warp_server_client::cloud_object::ServerPermissions;

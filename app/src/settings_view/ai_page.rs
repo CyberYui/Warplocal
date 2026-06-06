@@ -362,7 +362,7 @@ pub fn init_actions_from_parent_view<T: Action + Clone>(
             flags::SHARED_BLOCK_TITLE_GENERATION_FLAG,
         )
         .with_group(bindings::BindingGroup::WarpAi)
-        .with_enabled(|| FeatureFlag::SharedBlockTitleGeneration.is_enabled())],
+        .with_enabled(|| false)], // WarpLocal: shared block title generation disabled
         app,
     );
     ToggleSettingActionPair::add_toggle_setting_action_pairs_as_bindings(
@@ -1882,10 +1882,6 @@ impl AISettingsPageView {
                         && ai_settings
                             .natural_language_autosuggestions_enabled_internal
                             .is_supported_on_current_platform())
-                    || (FeatureFlag::SharedBlockTitleGeneration.is_enabled()
-                        && ai_settings
-                            .shared_block_title_generation_enabled_internal
-                            .is_supported_on_current_platform())
                     || (FeatureFlag::GitOperationsInCodeReview.is_enabled()
                         && ai_settings
                             .git_operations_autogen_enabled_internal
@@ -1919,7 +1915,6 @@ impl AISettingsPageView {
                 }
             }
             Some(AISubpage::WarpAgent) => {
-                // Oz page: global toggle + Active AI + Input + Other
                 widgets.push(Box::new(GlobalAIWidget::default()));
                 if ai_settings
                     .intelligent_autosuggestions_enabled_internal
@@ -1930,10 +1925,6 @@ impl AISettingsPageView {
                     || (FeatureFlag::PredictAMQueries.is_enabled()
                         && ai_settings
                             .natural_language_autosuggestions_enabled_internal
-                            .is_supported_on_current_platform())
-                    || (FeatureFlag::SharedBlockTitleGeneration.is_enabled()
-                        && ai_settings
-                            .shared_block_title_generation_enabled_internal
                             .is_supported_on_current_platform())
                     || (FeatureFlag::GitOperationsInCodeReview.is_enabled()
                         && ai_settings
@@ -4085,12 +4076,9 @@ impl ActiveAIWidget {
     }
 
     // TODO: Check if the user's enterprise billing policy allows toggling this feature.
-    fn is_shared_block_title_generation_toggleable(&self, app: &AppContext) -> bool {
-        FeatureFlag::SharedBlockTitleGeneration.is_enabled()
-            && AISettings::as_ref(app)
-                .shared_block_title_generation_enabled_internal
-                .is_supported_on_current_platform()
-            && (!UserWorkspaces::as_ref(app)
+    fn is_shared_block_title_generation_toggleable(&self, _app: &AppContext) -> bool {
+        false // WarpLocal: shared block title generation disabled
+            && (!UserWorkspaces::as_ref(_app)
                 .current_team()
                 .is_some_and(|team| {
                     team.billing_metadata.customer_type == CustomerType::Enterprise
@@ -4224,24 +4212,7 @@ impl ActiveAIWidget {
     ) -> Box<dyn warpui::Element> {
         let ai_settings = AISettings::as_ref(app);
         let is_toggleable = ai_settings.is_active_ai_enabled(app);
-        Flex::column()
-            .with_child(
-                render_ai_setting_toggle::<SharedBlockTitleGenerationEnabled>(
-                    "Shared Block Title Generation",
-                    AISettingsPageAction::ToggleSharedTitleGeneration,
-                    *ai_settings.shared_block_title_generation_enabled_internal,
-                    is_toggleable,
-                    self.shared_block_title_generation_toggle.clone(),
-                    &view.local_only_icon_tooltip_states,
-                    app,
-                ),
-            )
-            .with_child(render_ai_setting_description(
-                SHARED_BLOCK_TITLE_GENERATION_DESCRIPTION,
-                is_toggleable,
-                app,
-            ))
-            .finish()
+        Flex::column().finish() // WarpLocal: shared block title generation removed
     }
 
     fn render_git_operations_autogen_section(

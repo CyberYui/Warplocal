@@ -387,11 +387,7 @@ impl View for PromptAlertView {
             );
 
         if suggest_buy_credits {
-            text_fragments.push(FormattedTextFragment::plain_text("  "));
-            text_fragments.push(FormattedTextFragment::hyperlink_action(
-                "Add credits",
-                WorkspaceAction::ShowSettingsPage(SettingsSection::BillingAndUsage),
-            ));
+            // No-op: WarpLocal does not have billing
         } else {
             self.action_hyperlink(&state, &mut text_fragments, app);
         }

@@ -2,6 +2,13 @@
 
 纯本地版 Warp 终端，移除所有云端依赖，AI 功能直连用户自己的 API。
 
+基于 [Warp](https://github.com/warpdotdev/warp) 开源项目修改，对应依赖版本：
+- **Rust toolchain:** 1.92.0
+- **wgpu:** 29.0.1（GPU 渲染）
+- **warp_multi_agent_api:** [9a2d242](https://github.com/warpdotdev/warp-proto-apis/commit/9a2d2425c5d1eb40fb547956e659511906e03f9e)（多智能体 API）
+- **warp-workflows:** [793a98d](https://github.com/warpdotdev/workflows/commit/793a98ddda6ef19682aed66364faebd2829f0e01)（工作流引擎）
+- **session-sharing-protocol:** [3a12b87](https://github.com/warpdotdev/session-sharing-protocol/commit/3a12b871dfd1019a66057e4d9b7d5c812b73ee8c)（会话共享协议）
+
 ## 特性
 
 - 本地 AI 推理（支持 OpenAI、DeepSeek、Ollama 等）
@@ -38,20 +45,24 @@ export WARP_LOCAL_MODEL="deepseek-chat"
 
 ```bash
 # 安装 Rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+curl --proto '=https.2 -sSf https://sh.rustup.rs | sh
 
-# 编译
-cargo build --release -p app
+# 编译（约 20-30 分钟）
+MACOSX_DEPLOYMENT_TARGET=14.0 cargo build --release -p warp --bin warplocal
 ```
 
-### 3. 安装
+编译产物为 `target/release/warplocal`。
+
+### 3. 安装（与原版 Warp 并排共存）
+
+产物二进制名为 `warplocal`，Bundle ID 为 `dev.warp.WarpLocal`，可与原版 Warp 同时安装。
 
 ```bash
-# 备份原版
-cp -r /Applications/Warp.app /Applications/Warp.app.bak
+# 推荐：并排安装（不替换原版）
+# 需要手动创建 .app bundle 目录结构，或使用 cargo-bundle 工具
 
-# 替换
-cp target/release/Warp /Applications/Warp.app/Contents/MacOS/Warp
+# 编译完成后，产物在：
+ls target/release/warplocal
 ```
 
 ## 支持的 API

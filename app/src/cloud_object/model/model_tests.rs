@@ -1580,7 +1580,7 @@ fn test_update_folder_timestamp_from_child_trash() {
 
 #[test]
 fn test_shared_personal_object() {
-    let _guard = FeatureFlag::SharedWithMe.override_enabled(true);
+    let _guard = FeatureFlag::AgentMode.override_enabled(true);
     App::test((), |mut app| async move {
         initialize_app(
             &mut app,
@@ -1623,7 +1623,7 @@ fn test_shared_personal_object() {
 
 #[test]
 fn test_unshared_personal_object() {
-    let _guard = FeatureFlag::SharedWithMe.override_enabled(true);
+    let _guard = FeatureFlag::AgentMode.override_enabled(true);
     App::test((), |mut app| async move {
         initialize_app(
             &mut app,
@@ -1665,7 +1665,7 @@ fn test_unshared_personal_object() {
 
 #[test]
 fn test_shared_team_object() {
-    let _guard = FeatureFlag::SharedWithMe.override_enabled(true);
+    let _guard = FeatureFlag::AgentMode.override_enabled(true);
     App::test((), |mut app| async move {
         initialize_app(
             &mut app,
@@ -1708,7 +1708,7 @@ fn test_shared_team_object() {
 
 #[test]
 fn test_unshared_team_object() {
-    let _guard = FeatureFlag::SharedWithMe.override_enabled(true);
+    let _guard = FeatureFlag::AgentMode.override_enabled(true);
     App::test((), |mut app| async move {
         app.update(init_and_register_user_preferences);
         initialize_app(
@@ -1751,7 +1751,7 @@ fn test_unshared_team_object() {
 
 #[test]
 fn test_shared_object_in_unshared_folder() {
-    let _guard = FeatureFlag::SharedWithMe.override_enabled(true);
+    let _guard = FeatureFlag::AgentMode.override_enabled(true);
     App::test((), |mut app| async move {
         app.update(init_and_register_user_preferences);
         initialize_app(

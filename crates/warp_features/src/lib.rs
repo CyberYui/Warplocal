@@ -126,11 +126,12 @@ pub enum FeatureFlag {
     /// Enables next action prediction within Warp, powered by AI.
     AgentPredict,
 
-    /// Enables receiving shared Warp Drive objects.
-    SharedWithMe,
-
     /// Enables workflows for use with Agent Mode.
     AgentModeWorkflows,
+
+    /// @deprecated Removed in WarpLocal. Kept for test compatibility.
+    #[doc(hidden)]
+    SharedWithMe,
 
     /// Enables AI rules for use with Agent Mode.
     AIRules,
@@ -276,7 +277,8 @@ pub enum FeatureFlag {
     /// Reload files in an AI conversation to prevent stale files.
     ReloadStaleConversationFiles,
 
-    /// Auto generate the title when creating a shared block.
+    /// @deprecated Removed in WarpLocal. Kept for test compatibility.
+    #[doc(hidden)]
     SharedBlockTitleGeneration,
 
     /// Retry truncated file edit responses from the coding agent.
@@ -285,6 +287,8 @@ pub enum FeatureFlag {
     /// Enables reading images with the `read_files` tool.
     ReadImageFiles,
 
+    /// @deprecated Removed in WarpLocal. Kept for test compatibility.
+    #[doc(hidden)]
     UsageBasedPricing,
 
     /// Enables cross-repo codebase context.
@@ -870,6 +874,8 @@ pub enum FeatureFlag {
     GitCredentialRefresh,
 
     /// Gates the v2 billing and usage page redesign.
+    /// @deprecated Removed in WarpLocal. Kept for test compatibility.
+    #[doc(hidden)]
     BillingAndUsagePageV2,
 
     /// Replaces the raw harness CLI command with a styled header showing CLI name + status icon.
@@ -944,7 +950,6 @@ pub const DOGFOOD_FLAGS: &[FeatureFlag] = &[
     FeatureFlag::CustomInferenceEndpoints,
     FeatureFlag::CustomInferenceEndpointsEnterprise,
     FeatureFlag::RemoteCodebaseIndexing,
-    FeatureFlag::BillingAndUsagePageV2,
     FeatureFlag::RemoteCodeReview,
 ];
 
@@ -954,6 +959,14 @@ pub const PREVIEW_FLAGS: &[FeatureFlag] = &[
     FeatureFlag::BlocklistMarkdownTableRendering,
     FeatureFlag::MarkdownTables,
     FeatureFlag::GitOperationsInCodeReview,
+];
+
+/// Features that are always enabled regardless of build channel or user configuration.
+/// Used by WarpLocal to force-enable features without depending on cloud experiments.
+pub const ALWAYS_ENABLED_FEATURES: &[FeatureFlag] = &[
+    FeatureFlag::SoloUserByok,
+    FeatureFlag::CustomInferenceEndpoints,
+    FeatureFlag::CustomInferenceEndpointsEnterprise,
 ];
 
 /// Features enabled for all release builds (i.e.: everything but WarpLocal).
@@ -989,6 +1002,11 @@ impl FeatureFlag {
         match self {
             FeatureFlag::ForceLogin | FeatureFlag::FreeUserNoAi | FeatureFlag::SkipFirebaseAnonymousUser => return false,
             _ => {}
+        }
+
+        // Force-enable flags in ALWAYS_ENABLED_FEATURES regardless of configuration.
+        if ALWAYS_ENABLED_FEATURES.contains(self) {
+            return true;
         }
 
         overrides::get_override(*self)

@@ -779,9 +779,6 @@ impl ShareBlockModal {
             .build()
             .on_click(|ctx, _, _| {
                 ctx.dispatch_typed_action(ShareBlockModalAction::Close);
-                ctx.dispatch_typed_action(WorkspaceAction::ShowSettingsPage(
-                    SettingsSection::SharedBlocks,
-                ));
             });
         if matches!(self.request_state, ShareRequestState::Pending(_)) {
             button = button.disable();
@@ -1139,10 +1136,8 @@ impl View for ShareBlockModal {
     }
 }
 
-fn should_send_title_gen_request(ctx: &ViewContext<ShareBlockModal>) -> bool {
-    FeatureFlag::SharedBlockTitleGeneration.is_enabled()
-        && AISettings::as_ref(ctx).is_shared_block_title_generation_enabled(ctx)
-        && UserWorkspaces::as_ref(ctx).ai_allowed_for_current_team()
+fn should_send_title_gen_request(_ctx: &ViewContext<ShareBlockModal>) -> bool {
+    false // WarpLocal: shared block title generation disabled
 }
 
 struct SingleBlock {

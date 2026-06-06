@@ -25865,7 +25865,7 @@ impl TypedActionView for TerminalView {
                 });
             }
             OpenTeamSettingsPage => {
-                ctx.emit(Event::OpenSettings(SettingsSection::Teams));
+                // No-op: WarpLocal does not have team settings
             }
             SetMarkedText {
                 marked_text,
@@ -26104,7 +26104,7 @@ impl TypedActionView for TerminalView {
                 });
             }
             OpenBillingAndUsagePane => {
-                ctx.emit(Event::OpenSettings(SettingsSection::BillingAndUsage));
+                // No-op: WarpLocal does not have billing
             }
             OpenAddRulePane => {
                 ctx.emit(Event::OpenAddRulePane);

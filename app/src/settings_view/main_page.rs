@@ -256,22 +256,13 @@ impl MainSettingsPageView {
             ctx.notify();
         });
 
-        let mut widgets: Vec<Box<dyn SettingsWidget<View = Self>>> = vec![
-            Box::new(AccountWidget::default()),
-            Box::new(DividerWidget {}),
-        ];
-
-        widgets.push(Box::new(SettingsSyncWidget::default()));
-
-        widgets.push(Box::new(EarnRewardsWidget::default()));
+        let mut widgets: Vec<Box<dyn SettingsWidget<View = Self>>> = vec![];
 
         if ChannelState::app_version().is_some() {
             widgets.push(Box::new(VersionInfoWidget::default()));
         }
 
-        widgets.push(Box::new(LogoutWidget::default()));
-
-        let page = PageType::new_uncategorized(widgets, Some("Account"));
+        let page = PageType::new_uncategorized(widgets, Some("About"));
 
         MainSettingsPageView { page, auth_state }
     }
@@ -967,7 +958,7 @@ impl SettingsWidget for LogoutWidget {
 
 impl SettingsPageMeta for MainSettingsPageView {
     fn section() -> SettingsSection {
-        SettingsSection::Account
+        SettingsSection::About
     }
 
     fn should_render(&self, _ctx: &AppContext) -> bool {
