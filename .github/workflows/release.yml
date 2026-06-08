@@ -16,8 +16,6 @@ jobs:
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: aarch64-apple-darwin
 
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
@@ -25,11 +23,10 @@ jobs:
       - name: Build release
         run: MACOSX_DEPLOYMENT_TARGET=14.0 cargo build --release -p warp --bin warplocal
 
-      - name: Install packaging tool
-        run: brew install create-dmg
-
       - name: Package DMG
-        run: ./scripts/package.sh ${{ github.ref_name#v }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          ./scripts/package.sh "$VERSION"
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
