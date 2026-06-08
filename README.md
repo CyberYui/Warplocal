@@ -1,18 +1,37 @@
 # WarpLocal
 
-WarpLocal is a local-only fork of the [Warp](https://github.com/warpdotdev/warp) terminal. It removes all cloud dependencies and connects AI features directly to your own LLM API.
+[![Version](https://img.shields.io/badge/version-v0.1.0-blue.svg)](https://github.com/CyberYui/Warplocal/releases)
+[![Platform](https://img.shields.io/badge/platform-macOS%2014%2B%20(Apple%20Silicon)-lightgrey.svg)](https://github.com/CyberYui/Warplocal/releases)
+[![License](https://img.shields.io/badge/license-AGPL--3.0-green.svg)](./LICENSE)
+
+A local-only fork of the [Warp](https://github.com/warpdotdev/warp) terminal. All cloud dependencies removed — AI features connect directly to your own LLM API.
 
 ## Features
 
 - Local AI inference (OpenAI, DeepSeek, Ollama, or any OpenAI-compatible API)
 - No cloud dependencies, no account required
+- Persistent agent mode with context preservation
 - Full terminal emulation with GPU rendering
 - SSH support
 - Works alongside the official Warp app
 
-## Quick Start
+## Installation
 
-### 1. Configure API
+### Download (Recommended)
+
+Download the latest `.dmg` from [Releases](https://github.com/CyberYui/Warplocal/releases), open it, and drag `WarpLocal.app` to `/Applications`.
+
+> **Gatekeeper:** On first launch, right-click the app and select "Open" to bypass Gatekeeper.
+
+### Build from Source
+
+```bash
+MACOSX_DEPLOYMENT_TARGET=14.0 cargo build --release -p warp --bin warplocal
+```
+
+The binary is at `target/release/warplocal`.
+
+## Configuration
 
 Create `~/.warplocal/config.toml`:
 
@@ -30,16 +49,6 @@ export WARP_LOCAL_API_KEY="your-api-key-here"
 export WARP_LOCAL_MODEL="deepseek-chat"
 ```
 
-### 2. Build
-
-```bash
-MACOSX_DEPLOYMENT_TARGET=14.0 cargo build --release -p warp --bin warplocal
-```
-
-### 3. Install
-
-The binary is at `target/release/warplocal`. Bundle ID is `dev.warp.WarpLocal` — install it as a separate `.app` bundle to run alongside the official Warp.
-
 ## Supported APIs
 
 | Provider | URL | Model |
@@ -55,7 +64,14 @@ app/           — Main application (terminal, AI, settings)
 crates/        — Shared libraries (UI framework, editor, completer, etc.)
 resources/     — Bundled config templates
 ui/            — WarpUI framework source (MIT license)
+scripts/       — Build & packaging scripts
 ```
+
+## Requirements
+
+- macOS 14.0+
+- Apple Silicon (M1/M2/M3/M4)
+- An OpenAI-compatible LLM API
 
 ## License
 

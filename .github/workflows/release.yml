@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build release
+        run: MACOSX_DEPLOYMENT_TARGET=14.0 cargo build --release -p warp --bin warplocal
+
+      - name: Install packaging tool
+        run: brew install create-dmg
+
+      - name: Package DMG
+        run: ./scripts/package.sh ${{ github.ref_name#v }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: WarpLocal ${{ github.ref_name }}
+          body_path: CHANGELOG.md
+          files: target/release/WarpLocal-*.dmg
+          draft: true
