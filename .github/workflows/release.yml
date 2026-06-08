@@ -10,7 +10,17 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-15
+    strategy:
+      matrix:
+        include:
+          - target: aarch64-apple-darwin
+            runner: macos-15
+            arch: aarch64
+          - target: x86_64-apple-darwin
+            runner: macos-13
+            arch: x86_64
+
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
 
@@ -20,22 +30,93 @@ jobs:
       - name: Install protobuf
         run: brew install protobuf
 
+      - name: Add target
+        run: rustup target add ${{ matrix.target }}
+
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
 
       - name: Build release
-        run: MACOSX_DEPLOYMENT_TARGET=14.0 cargo build --release -p warp --bin warplocal
+        run: MACOSX_DEPLOYMENT_TARGET=14.0 cargo build --release -p warp --bin warplocal --target ${{ matrix.target }}
 
-      - name: Package DMG
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: warplocal-${{ matrix.arch }}
+          path: target/${{ matrix.target }}/release/warplocal
+
+  package:
+    needs: build
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Create universal binary
+        run: |
+          mkdir -p universal
+          lipo -create \
+            artifacts/warplocal-aarch64/warplocal \
+            artifacts/warplocal-x86_64/warplocal \
+            -output universal/warplocal
+          chmod +x universal/warplocal
+          lipo -info universal/warplocal
+
+      - name: Create .app bundle
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          ./scripts/package.sh "$VERSION"
+          APP_DIR="WarpLocal.app/Contents"
+          mkdir -p "${APP_DIR}/MacOS" "${APP_DIR}/Resources"
+          cp universal/warplocal "${APP_DIR}/MacOS/warplocal"
+          echo "Created WarpLocal.app"
+
+      - name: Create DMG
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          hdiutil create \
+            -volname "WarpLocal" \
+            -srcfolder "WarpLocal.app" \
+            -ov \
+            -format UDZO \
+            "WarpLocal-v${VERSION}.dmg"
+
+      - name: Generate release notes
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          cat > RELEASE_NOTES.md << EOF
+          ## WarpLocal v${VERSION}
+
+          ### What's New
+          - Universal binary: supports both Apple Silicon and Intel Macs
+          - Full terminal emulation with GPU rendering
+          - Agent mode with persistent context
+          - Local AI inference via your own LLM API
+
+          ### Requirements
+          - macOS 14.0+ (Apple Silicon or Intel)
+          - An OpenAI-compatible LLM API
+
+          ### Installation
+          1. Download \`WarpLocal-v${VERSION}.dmg\`
+          2. Open the DMG and drag WarpLocal.app to /Applications
+          3. Launch WarpLocal and configure your API
+
+          ### Known Issues
+          - First launch may require right-click > Open to bypass Gatekeeper
+          EOF
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: WarpLocal ${{ github.ref_name }}
-          body_path: CHANGELOG.md
-          files: target/release/WarpLocal-*.dmg
+          body_path: RELEASE_NOTES.md
+          files: WarpLocal-v*.dmg
           draft: true
