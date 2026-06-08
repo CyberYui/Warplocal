@@ -55,6 +55,7 @@ pub struct FreeUserNoAiSlide {
     scroll_state: ClippedScrollStateHandle,
 }
 
+#[allow(dead_code)]
 impl FreeUserNoAiSlide {
     pub(crate) fn new(onboarding_state: ModelHandle<OnboardingStateModel>) -> Self {
         Self {

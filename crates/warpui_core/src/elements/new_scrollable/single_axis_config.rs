@@ -13,7 +13,7 @@ use crate::{
 
 use super::{
     util::{scroll_clipped_scrollable_handle_with_delta, scroll_delta_for_axis},
-    NewScrollableElement, ScrollableAxis,
+    NewScrollableElement,
 };
 
 use crate::elements::{ScrollTarget, ScrollToPositionMode};
@@ -42,7 +42,7 @@ pub enum SingleAxisConfig {
 
 impl SingleAxisConfig {
     /// At run-time, validate if the passed-in axis config is valid.
-    pub(super) fn validate(&self, axis: Axis) {
+    pub(super) fn validate(&self, _axis: Axis) {
         #[cfg(debug_assertions)]
         {
             if let SingleAxisConfig::Manual { child, .. } = self {

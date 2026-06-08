@@ -1,3 +1,7 @@
+#![allow(dead_code)]
+#![allow(unused_imports)]
+#![allow(deprecated)]
+
 pub mod fonts;
 pub mod platform;
 pub mod rendering;

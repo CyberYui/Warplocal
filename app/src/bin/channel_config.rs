@@ -5,9 +5,6 @@
 use warp_core::AppId;
 use warp_core::channel::{ChannelConfig, OzConfig, WarpServerConfig};
 
-/// The name of the config generator binary, expected to be on PATH.
-const CONFIG_BIN_NAME: &str = "warp-channel-config";
-
 #[macro_export]
 #[cfg(windows)]
 macro_rules! path_concat {

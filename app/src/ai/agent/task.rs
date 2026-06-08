@@ -116,7 +116,7 @@ pub enum UpgradeOptimisticTaskError {
 }
 
 #[derive(Debug, Clone)]
-pub(super) struct SubagentParams {
+pub(crate) struct SubagentParams {
     pub(super) tool_call_id: String,
     pub(super) call: api::message::tool_call::Subagent,
 }
@@ -131,22 +131,22 @@ mod optimistic {
     use crate::terminal::model::block::BlockId;
 
     #[derive(Debug, Clone)]
-    pub(super) struct CLIAgentSubtask {
+    pub(crate) struct CLIAgentSubtask {
         pub(super) block_id: BlockId,
     }
 
     #[derive(Debug, Clone)]
-    pub(super) enum Task {
+    pub(crate) enum Task {
         Root,
         CLIAgent(CLIAgentSubtask),
     }
 
     impl Task {
-        pub(super) fn is_root(&self) -> bool {
+        pub(crate) fn is_root(&self) -> bool {
             matches!(self, Task::Root)
         }
 
-        pub(super) fn is_cli_subagent(&self) -> bool {
+        pub(crate) fn is_cli_subagent(&self) -> bool {
             matches!(self, Task::CLIAgent(..))
         }
     }

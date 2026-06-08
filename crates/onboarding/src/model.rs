@@ -143,6 +143,7 @@ pub(crate) struct OnboardingStateModel {
     workspace_enforces_autonomy: bool,
     /// Whether the AgentView feature flag is enabled.
     agent_modality_enabled: bool,
+    #[allow(dead_code)]
     /// Whether the user is in the FreeUserNoAi experiment group (and is free tier).
     /// When true, the Agent Driven Development option on the intention slide is locked
     /// behind an upgrade CTA.

@@ -5,7 +5,7 @@ use pathfinder_geometry::{
 
 use crate::{
     elements::{
-        new_scrollable::{util::child_constraint_for_axis, ScrollableAxis},
+        new_scrollable::{util::child_constraint_for_axis},
         Axis, ClippedScrollStateHandle, ScrollData, ScrollStateHandle, SelectableElement,
         Vector2FExt,
     },

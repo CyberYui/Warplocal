@@ -1328,6 +1328,7 @@ impl ServerApi {
     /// and wraps the response into the multi-agent streaming protocol format.
     /// Supports custom inference endpoints configured in settings.
     #[cfg(not(target_family = "wasm"))]
+    #[allow(deprecated)]
     async fn generate_multi_agent_output_local(
         &self,
         request: &warp_multi_agent_api::Request,
