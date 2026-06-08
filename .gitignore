@@ -15,6 +15,14 @@ secrets/
 credentials/
 .warplocal/
 
+# 上游贡献者工具（本地开发不需要）
+.clippy.toml
+.rustfmt.toml
+deny.toml
+diesel.toml
+flake.lock
+PSScriptAnalyzerCustomRules.psm1
+
 # 开发工具配置
 .claude/settings.local.json
 .claude/worktrees/

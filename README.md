@@ -1,26 +1,20 @@
 # WarpLocal
 
-纯本地版 Warp 终端，移除所有云端依赖，AI 功能直连用户自己的 API。
+WarpLocal is a local-only fork of the [Warp](https://github.com/warpdotdev/warp) terminal. It removes all cloud dependencies and connects AI features directly to your own LLM API.
 
-基于 [Warp](https://github.com/warpdotdev/warp) 开源项目修改，对应依赖版本：
-- **Rust toolchain:** 1.92.0
-- **wgpu:** 29.0.1（GPU 渲染）
-- **warp_multi_agent_api:** [9a2d242](https://github.com/warpdotdev/warp-proto-apis/commit/9a2d2425c5d1eb40fb547956e659511906e03f9e)（多智能体 API）
-- **warp-workflows:** [793a98d](https://github.com/warpdotdev/workflows/commit/793a98ddda6ef19682aed66364faebd2829f0e01)（工作流引擎）
-- **session-sharing-protocol:** [3a12b87](https://github.com/warpdotdev/session-sharing-protocol/commit/3a12b871dfd1019a66057e4d9b7d5c812b73ee8c)（会话共享协议）
+## Features
 
-## 特性
+- Local AI inference (OpenAI, DeepSeek, Ollama, or any OpenAI-compatible API)
+- No cloud dependencies, no account required
+- Full terminal emulation with GPU rendering
+- SSH support
+- Works alongside the official Warp app
 
-- 本地 AI 推理（支持 OpenAI、DeepSeek、Ollama 等）
-- 无云端依赖，无需付费
-- 完整的终端功能
-- SSH 连接正常工作
+## Quick Start
 
-## 快速开始
+### 1. Configure API
 
-### 1. 配置 API
-
-在 `~/.warplocal/config.toml` 中配置：
+Create `~/.warplocal/config.toml`:
 
 ```toml
 api_url = "https://api.deepseek.com/v1/chat/completions"
@@ -28,7 +22,7 @@ api_key = "your-api-key-here"
 model = "deepseek-chat"
 ```
 
-或使用环境变量：
+Or use environment variables:
 
 ```bash
 export WARP_LOCAL_API_URL="https://api.deepseek.com/v1/chat/completions"
@@ -36,53 +30,33 @@ export WARP_LOCAL_API_KEY="your-api-key-here"
 export WARP_LOCAL_MODEL="deepseek-chat"
 ```
 
-**重要：** 
-- `config.toml` 已在 `.gitignore` 中，不会被提交到版本控制
-- 请勿将API密钥硬编码到代码中
-- 使用环境变量或配置文件管理敏感信息
-
-### 2. 编译
+### 2. Build
 
 ```bash
-# 安装 Rust
-curl --proto '=https.2 -sSf https://sh.rustup.rs | sh
-
-# 编译（约 20-30 分钟）
 MACOSX_DEPLOYMENT_TARGET=14.0 cargo build --release -p warp --bin warplocal
 ```
 
-编译产物为 `target/release/warplocal`。
+### 3. Install
 
-### 3. 安装（与原版 Warp 并排共存）
+The binary is at `target/release/warplocal`. Bundle ID is `dev.warp.WarpLocal` — install it as a separate `.app` bundle to run alongside the official Warp.
 
-产物二进制名为 `warplocal`，Bundle ID 为 `dev.warp.WarpLocal`，可与原版 Warp 同时安装。
+## Supported APIs
 
-```bash
-# 推荐：并排安装（不替换原版）
-# 需要手动创建 .app bundle 目录结构，或使用 cargo-bundle 工具
+| Provider | URL | Model |
+|----------|-----|-------|
+| OpenAI | `https://api.openai.com/v1/chat/completions` | `gpt-4o` |
+| DeepSeek | `https://api.deepseek.com/v1/chat/completions` | `deepseek-chat` |
+| Ollama | `http://localhost:11434/v1/chat/completions` | `qwen2.5` |
 
-# 编译完成后，产物在：
-ls target/release/warplocal
+## Project Structure
+
+```
+app/           — Main application (terminal, AI, settings)
+crates/        — Shared libraries (UI framework, editor, completer, etc.)
+resources/     — Bundled config templates
+ui/            — WarpUI framework source (MIT license)
 ```
 
-## 支持的 API
+## License
 
-- **OpenAI:** `https://api.openai.com/v1/chat/completions` + `gpt-4o`
-- **DeepSeek:** `https://api.deepseek.com/v1/chat/completions` + `deepseek-chat`
-- **本地 Ollama:** `http://localhost:11434/v1/chat/completions` + `qwen2.5`
-
-## 许可证
-
-本项目基于 [AGPL-3.0](LICENSE-AGPL) 许可证。
-
-### 致谢
-
-本项目基于 [Warp](https://github.com/warpdotdev/warp) 开源项目修改而成。
-
-- 原版 Warp UI 框架 (warpui_core, warpui) 基于 [MIT 许可证](LICENSE-MIT)
-- 其余代码基于 [AGPL-3.0 许可证](LICENSE-AGPL)
-- 感谢 Warp 团队的开源贡献
-
-## 免责声明
-
-本项目是 Warp 终端的本地化修改版本，与 Warp 官方无关。
+AGPL-3.0. Based on the [Warp](https://github.com/warpdotdev/warp) open-source project. The UI framework crates (`ui/`) remain under MIT.
